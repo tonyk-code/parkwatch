@@ -1,0 +1,8 @@
+{
+  "_comment": "Each spot is a pixel-coordinate box [x1, y1, x2, y2] on your camera's frame. These example coordinates match the included test clip -- replace them with real coordinates from your own footage (see pick_spots.py).",
+  "spots": [
+    { "id": "A1", "box": [280, 330, 490, 432] },
+    { "id": "A2", "box": [520, 60, 700, 180] },
+    { "id": "A3", "box": [40, 60, 220, 180] }
+  ]
+}

@@ -1,0 +1,46 @@
+# =========================
+# Python / Vision Service
+# =========================
+
+vision-service/venv/
+vision-service/__pycache__/
+vision-service/**/*.py[cod]
+vision-service/.pytest_cache/
+vision-service/.mypy_cache/
+
+# Python environment variables
+.env
+.env.*
+
+# =========================
+# Node / React / Expo
+# =========================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Expo
+.expo/
+.expo-shared/
+
+# React / Vite / Next builds
+dist/
+build/
+.next/
+
+# =========================
+# IDE
+# =========================
+
+.vscode/
+.idea/
+
+# =========================
+# OS
+# =========================
+
+.DS_Store
+Thumbs.db
