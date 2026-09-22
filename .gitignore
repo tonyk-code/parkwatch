@@ -7,6 +7,7 @@ vision-service/__pycache__/
 vision-service/**/*.py[cod]
 vision-service/.pytest_cache/
 vision-service/.mypy_cache/
+vision-service/assets/video.mp4
 
 # Python environment variables
 .env
@@ -44,3 +45,4 @@ build/
 
 .DS_Store
 Thumbs.db
+
