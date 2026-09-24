@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\SessionMode;
+use App\Enums\SessionStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -53,6 +55,8 @@ class ParkingSession extends Model
     protected function casts(): array
     {
         return [
+            'status' => SessionStatus::class,
+            'session_mode' => SessionMode::class,
             'entered_at' => 'datetime',
             'exited_at' => 'datetime',
             'amount_due' => 'integer',

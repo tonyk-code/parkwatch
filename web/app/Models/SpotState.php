@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\SpotStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -40,6 +41,7 @@ class SpotState extends Model
     protected function casts(): array
     {
         return [
+            'status' => SpotStatus::class,
             'confidence' => 'decimal:3',
             'manual_override' => 'boolean',
             'override_until' => 'datetime',

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserType;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -38,6 +39,7 @@ class User extends Authenticatable
     {
         return [
             'password_hash' => 'hashed',
+            'user_type' => UserType::class,
             'is_active' => 'boolean',
             'last_login_at' => 'datetime',
         ];
@@ -71,5 +73,33 @@ class User extends Authenticatable
     public function auditLogs(): HasMany
     {
         return $this->hasMany(AuditLog::class);
+    }
+
+    public function hasActiveSiteAssignment(int $siteId): bool
+    {
+        return $this->staffAssignments()
+            ->where('site_id', $siteId)
+            ->where('is_active', true)
+            ->where('starts_at', '<=', now())
+            ->where(function ($query) {
+                $query
+                    ->whereNull('ends_at')
+                    ->orWhere('ends_at', '>=', now());
+            })
+            ->exists();
+    }
+
+    public function roleForSite(int $siteId): ?string
+    {
+        return $this->staffAssignments()
+            ->where('site_id', $siteId)
+            ->where('is_active', true)
+            ->where('starts_at', '<=', now())
+            ->where(function ($query) {
+                $query
+                    ->whereNull('ends_at')
+                    ->orWhere('ends_at', '>=', now());
+            })
+            ->value('role_name');
     }
 }
