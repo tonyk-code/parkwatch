@@ -58,6 +58,11 @@ class Spot extends Model
         return $this->hasMany(ParkingSession::class);
     }
 
+    public function spotState(): HasOne
+    {
+        return $this->hasOne(SpotState::class, 'spot_id', 'id');
+    }
+
     public function detectionEvents(): HasMany
     {
         return $this->hasMany(DetectionEvent::class);

@@ -44,13 +44,13 @@ class RatePlan extends Model
         return $this->belongsTo(Site::class);
     }
 
-    public function rules(): HasMany
-    {
-        return $this->hasMany(RateRule::class);
-    }
-
     public function parkingSessions(): HasMany
     {
         return $this->hasMany(ParkingSession::class);
+    }
+
+    public function rateRules(): HasMany
+    {
+        return $this->hasMany(RateRule::class, 'rate_plan_id');
     }
 }

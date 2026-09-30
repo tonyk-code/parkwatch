@@ -2,65 +2,71 @@
 
 namespace App\Policies;
 
+use App\Enums\UserType;
 use App\Models\ParkingSession;
+use App\Models\Site;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ParkingSessionPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
+    public function view(User $user, ParkingSession $session): bool
     {
-        return false;
+        if (!$user->is_active) {
+            return false;
+        }
+
+        $site = $session->site;
+
+        if (!$site || $user->organization_id !== $site->organization_id) {
+            return false;
+        }
+
+        if ($user->user_type === UserType::Owner) {
+            return true;
+        }
+
+        if ($user->user_type !== UserType::Staff) {
+            return false;
+        }
+
+        return $user->hasActiveSiteAssignment($site->id);
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, ParkingSession $parkingSession): bool
+    public function create(User $user, Site $site): bool
     {
-        return false;
+        if (!$user->is_active) {
+            return false;
+        }
+
+        if ($user->organization_id !== $site->organization_id) {
+            return false;
+        }
+
+        if ($user->user_type === UserType::Owner) {
+            return true;
+        }
+
+        if ($user->user_type !== UserType::Staff) {
+            return false;
+        }
+
+        return $user->hasActiveSiteAssignment($site->id);
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
+    public function close(User $user, ParkingSession $session): bool
     {
-        return false;
-    }
+        if (!$this->view($user, $session)) {
+            return false;
+        }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, ParkingSession $parkingSession): bool
-    {
-        return false;
-    }
+        if ($user->user_type === UserType::Owner) {
+            return true;
+        }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, ParkingSession $parkingSession): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, ParkingSession $parkingSession): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, ParkingSession $parkingSession): bool
-    {
-        return false;
+        return in_array(
+            $user->roleForSite($session->site_id),
+            ["manager", "attendant"],
+            true
+        );
     }
 }

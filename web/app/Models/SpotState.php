@@ -50,6 +50,15 @@ class SpotState extends Model
         ];
     }
 
+    public function hasActiveOverride(): bool
+    {
+        return $this->manual_override
+            && (
+                $this->override_until === null
+                || $this->override_until->isFuture()
+            );
+    }
+
     public function spot(): BelongsTo
     {
         return $this->belongsTo(Spot::class, 'spot_id');

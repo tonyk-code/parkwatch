@@ -19,7 +19,7 @@ class RateRuleFactory extends Factory
             'rate_plan_id' => RatePlan::factory(),
             'sequence' => 1,
             'from_minute' => 0,
-            'to_minute' => 60,
+            'to_minute' => null,
             'unit' => 'hour',
             'price_minor' => 2000,
             'day_of_week_mask' => 127,

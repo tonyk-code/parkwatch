@@ -1,7 +1,13 @@
+export type UserType = "owner" | "staff" | "customer";
+
 export type User = {
     id: number;
-    name: string;
+    full_name: string;
     email: string;
+    user_type: UserType;
+    organization_id: number | null;
+    is_active: boolean;
+    is_manager: boolean;
     avatar?: string;
     email_verified_at: string | null;
     created_at: string;
@@ -10,5 +16,5 @@ export type User = {
 };
 
 export type Auth = {
-    user: User;
+    user: User | null;
 };

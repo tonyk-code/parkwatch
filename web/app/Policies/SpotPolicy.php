@@ -2,65 +2,54 @@
 
 namespace App\Policies;
 
+use App\Enums\UserType;
+use App\Models\Site;
 use App\Models\Spot;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class SpotPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can view the model.
-     */
     public function view(User $user, Spot $spot): bool
     {
-        return false;
+        return $this->canAccessSpot($user, $spot);
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
+    public function override(User $user, Spot $spot): bool
     {
-        return false;
+        if (!$this->canAccessSpot($user, $spot)) {
+            return false;
+        }
+
+        return in_array(
+            $user->user_type,
+            [
+                UserType::Owner,
+                UserType::Staff,
+            ],
+            true
+        );
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, Spot $spot): bool
+    private function canAccessSpot(User $user, Spot $spot): bool
     {
-        return false;
-    }
+        $site = $spot->zone?->site;
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, Spot $spot): bool
-    {
-        return false;
-    }
+        if (!$site || !$user->is_active) {
+            return false;
+        }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Spot $spot): bool
-    {
-        return false;
-    }
+        if ($user->organization_id !== $site->organization_id) {
+            return false;
+        }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Spot $spot): bool
-    {
-        return false;
+        if ($user->user_type === UserType::Owner) {
+            return true;
+        }
+
+        if ($user->user_type !== UserType::Staff) {
+            return false;
+        }
+
+        return $user->hasActiveSiteAssignment($site->id);
     }
 }

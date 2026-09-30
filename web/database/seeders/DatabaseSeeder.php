@@ -11,6 +11,8 @@ use App\Models\User;
 use App\Models\Zone;
 use App\Models\StaffAssignment;
 use Illuminate\Database\Seeder;
+use App\Enums\SpotStatus;
+use App\Models\SpotState;
 
 class DatabaseSeeder extends Seeder
 {
@@ -51,11 +53,31 @@ class DatabaseSeeder extends Seeder
             ]);
 
             for ($spotNumber = 1; $spotNumber <= 20; $spotNumber++) {
-                Spot::factory()->create([
+                $spot = Spot::factory()->create([
                     'zone_id' => $zone->id,
                     'code' => sprintf('%s-%02d', $zoneData['code'], $spotNumber),
                     'display_x' => (($spotNumber - 1) % 5) * 10,
                     'display_y' => intdiv($spotNumber - 1, 5) * 10,
+                ]);
+
+                $status = SpotStatus::Free;
+
+                if ($spotNumber <= 5) {
+                    $status = SpotStatus::Occupied;
+                } elseif ($spotNumber <= 7) {
+                    $status = SpotStatus::Reserved;
+                } elseif ($spotNumber === 8) {
+                    $status = SpotStatus::Offline;
+                }
+
+                SpotState::create([
+                    'spot_id' => $spot->id,
+                    'status' => $status,
+                    'source' => 'cv',
+                    'manual_override' => false,
+                    'polygon_version' => $spot->polygon_version,
+                    'last_changed_at' => now(),
+                    'last_seen_at' => now(),
                 ]);
             }
         }

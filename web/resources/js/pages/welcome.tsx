@@ -1,357 +1,932 @@
-import { Head } from '@inertiajs/react';
+import { useState } from "react";
+import Logo from "@/components/Logo";
+import { Link, usePage } from "@inertiajs/react";
 
-export default function Welcome() {
+type AuthProps = {
+    auth: {
+        user: {
+            id: number;
+            full_name: string;
+            email: string;
+            user_type: string;
+            organization_id: number | null;
+            is_active: boolean;
+        } | null;
+    };
+};
+
+export default function ParkWatchLanding() {
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [slide, setSlide] = useState(0);
+    const { auth } = usePage<AuthProps>().props;
+    const isAuthed = Boolean(auth?.user);
+
+    const authHref = isAuthed ? "/dashboard" : "/login";
+    const authLabel = isAuthed ? "Dashboard" : "Login";
+
+    const locations = [
+        {
+            name: "Redwood Reserve",
+            place: "Northern California",
+            status: "All clear",
+            metric: "98% trails open",
+            pos: "0%",
+        },
+        {
+            name: "Mirror Lake Wetlands",
+            place: "Grand Teton, Wyoming",
+            status: "Habitat stable",
+            metric: "42 species active",
+            pos: "33.333%",
+        },
+        {
+            name: "Summit Meadow",
+            place: "Rocky Mountains",
+            status: "Patrol active",
+            metric: "12 zones monitored",
+            pos: "66.666%",
+        },
+    ];
+
+    const locationsImage =
+        "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=2000&q=85";
+
+    const aerialImage =
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1600&q=85";
+
     return (
-        <>
-            <Head title="Welcome" />
-            <div className="flex min-h-screen flex-col items-center bg-[#FDFDFC] p-6 text-[#1b1b18] lg:justify-center lg:p-8 dark:bg-[#0a0a0a]">
-                <div className="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
-                    <main className="flex w-full max-w-[335px] flex-col-reverse lg:max-w-4xl lg:flex-row">
-                        <div className="flex-1 rounded-br-lg rounded-bl-lg bg-white p-6 pb-12 text-[13px] leading-[20px] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] lg:rounded-tl-lg lg:rounded-br-none lg:p-20 dark:bg-[#161615] dark:text-[#EDEDEC] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
-                            <h1 className="mb-1 font-medium">
-                                Let's get started
-                            </h1>
-                            <p className="mb-2 text-[#706f6c] dark:text-[#A1A09A]">
-                                Laravel has an incredibly rich ecosystem.
-                                <br />
-                                We suggest starting with the following.
-                            </p>
-                            <ul className="mb-4 flex flex-col lg:mb-6">
-                                <li className="relative flex items-center gap-4 py-2 before:absolute before:top-1/2 before:bottom-0 before:left-[0.4rem] before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A]">
-                                    <span className="relative bg-white py-1 dark:bg-[#161615]">
-                                        <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-[#e3e3e0] bg-[#FDFDFC] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] dark:border-[#3E3E3A] dark:bg-[#161615]">
-                                            <span className="h-1.5 w-1.5 rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A]" />
-                                        </span>
-                                    </span>
-                                    <span>
-                                        Read the
-                                        <a
-                                            href="https://laravel.com/docs"
-                                            target="_blank"
-                                            className="ml-1 inline-flex items-center space-x-1 font-medium text-[#f53003] underline underline-offset-4 dark:text-[#FF4433]"
-                                        >
-                                            <span>Documentation</span>
-                                            <svg
-                                                width={10}
-                                                height={11}
-                                                viewBox="0 0 10 11"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="h-2.5 w-2.5"
-                                            >
-                                                <path
-                                                    d="M7.70833 6.95834V2.79167H3.54167M2.5 8L7.5 3.00001"
-                                                    stroke="currentColor"
-                                                    strokeLinecap="square"
-                                                />
-                                            </svg>
-                                        </a>
-                                    </span>
-                                </li>
-                                <li className="relative flex items-center gap-4 py-2 before:absolute before:top-0 before:bottom-1/2 before:left-[0.4rem] before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A]">
-                                    <span className="relative bg-white py-1 dark:bg-[#161615]">
-                                        <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-[#e3e3e0] bg-[#FDFDFC] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] dark:border-[#3E3E3A] dark:bg-[#161615]">
-                                            <span className="h-1.5 w-1.5 rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A]" />
-                                        </span>
-                                    </span>
-                                    <span>
-                                        Watch video tutorials at
-                                        <a
-                                            href="https://laracasts.com"
-                                            target="_blank"
-                                            className="ml-1 inline-flex items-center space-x-1 font-medium text-[#f53003] underline underline-offset-4 dark:text-[#FF4433]"
-                                        >
-                                            <span>Laracasts</span>
-                                            <svg
-                                                width={10}
-                                                height={11}
-                                                viewBox="0 0 10 11"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="h-2.5 w-2.5"
-                                            >
-                                                <path
-                                                    d="M7.70833 6.95834V2.79167H3.54167M2.5 8L7.5 3.00001"
-                                                    stroke="currentColor"
-                                                    strokeLinecap="square"
-                                                />
-                                            </svg>
-                                        </a>
-                                    </span>
-                                </li>
-                            </ul>
-                            <ul className="flex gap-3 text-sm leading-normal">
-                                <li>
+        <main className="overflow-hidden bg-[#f5f5f7] text-[#29272f]">
+            <section className="relative mx-auto min-h-190 overflow-hidden bg-transparent lg:min-h-230">
+                {/* Section-scoped animations (cloud drift, card float, live pulse, ticker marquee, bar grow) */}
+                <style>{`
+                                @keyframes pw-drift {
+                                    0%, 100% { transform: translateX(0) translateY(0); }
+                                    50% { transform: translateX(46px) translateY(-12px); }
+                                }
+                                @keyframes pw-float-soft {
+                                    0%, 100% { transform: translateY(0) rotate(0deg); }
+                                    50% { transform: translateY(-8px) rotate(0.5deg); }
+                                }
+                                @keyframes pw-pulse-ring {
+                                    0% { transform: scale(1); opacity: 0.6; }
+                                    100% { transform: scale(2.4); opacity: 0; }
+                                }
+                                @keyframes pw-marquee {
+                                    from { transform: translateX(0); }
+                                    to { transform: translateX(-50%); }
+                                }
+                                @keyframes pw-bar {
+                                    from { transform: scaleY(0.15); }
+                                    to { transform: scaleY(1); }
+                                }
+                                @media (prefers-reduced-motion: reduce) {
+                                    [class*="pw-"] { animation: none !important; }
+                                }
+                            `}</style>
+
+                {/* Sky wash + hero photo */}
+                <div className="absolute inset-x-0 top-0 h-1/3 bg-linear-to-b from-[#7bc7e8] to-transparent" />
+                <img
+                    src={"/hero.png"}
+                    alt="Park visitor center in a protected mountain landscape"
+                    className="absolute inset-x-0 bottom-0 h-full w-full object-cover object-center"
+                />
+
+                <div className="pointer-events-none absolute left-[8%] top-[16%] size-64 rounded-full bg-white/60 blur-3xl animate-[pw-drift_22s_ease-in-out_infinite]" />
+                <div className="pointer-events-none absolute right-[10%] top-[8%] size-80 rounded-full bg-[#f3d9ea]/50 blur-3xl animate-[pw-drift_28s_ease-in-out_infinite_reverse]" />
+                <div className="pointer-events-none absolute left-[38%] top-[32%] size-96 rounded-full bg-white/40 blur-3xl animate-[pw-drift_34s_ease-in-out_infinite]" />
+
+                <div className="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-[#f5f5f7] to-transparent" />
+
+                <header className="relative z-20 w-full border-b border-border-light bg-bg-surface/55 backdrop-blur-xl">
+                    <div className="mx-auto flex w-[92%] max-w-7xl items-center justify-between py-4">
+                        {/* BRAND */}
+                        <a
+                            href="#"
+                            aria-label="ParkWatch home"
+                            className="group flex items-center gap-3 text-text-primary"
+                        >
+                            <Logo
+                                className="h-9 w-9 shadow-soft transition-transform duration-300 group-hover:-translate-y-0.5"
+                                classNameIcon="bg-current"
+                            />
+                            <span className="font-editorial text-2xl leading-none">
+                                ParkWatch
+                            </span>
+                        </a>
+                
+                        {/* DESKTOP NAV */}
+                        <nav
+                            aria-label="Primary navigation"
+                            className="hidden items-center gap-1 rounded-pill border border-border-light bg-bg-surface/45 p-1.5 shadow-soft backdrop-blur-xl md:flex"
+                        >
+                            <a
+                                href="#platform"
+                                className="rounded-pill px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-surface/75 hover:text-text-primary"
+                            >
+                                Platform
+                            </a>
+                            <a
+                                href="#insights"
+                                className="rounded-pill px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-surface/75 hover:text-text-primary"
+                            >
+                                Insights
+                            </a>
+                            <a
+                                href="#parks"
+                                className="rounded-pill px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-surface/75 hover:text-text-primary"
+                            >
+                                Parks
+                            </a>
+                            <a
+                                href="#contact"
+                                className="rounded-pill px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-surface/75 hover:text-text-primary"
+                            >
+                                Contact
+                            </a>
+                        </nav>
+                
+                        {/* DESKTOP AUTH ACTION */}
+                        <Link
+                            href={authHref}
+                            className="hidden rounded-pill bg-action-dark px-5 py-2.5 text-sm font-semibold text-action-dark-foreground shadow-cta transition-all duration-300 hover:-translate-y-0.5 hover:opacity-90 md:inline-flex"
+                        >
+                            {authLabel}
+                        </Link>
+                
+                        {/* MOBILE MENU BUTTON */}
+                        <button
+                            type="button"
+                            aria-label={menuOpen ? "Close menu" : "Open menu"}
+                            aria-expanded={menuOpen}
+                            onClick={() => setMenuOpen(!menuOpen)}
+                            className="grid size-10 place-items-center rounded-icon border border-border-light bg-bg-surface/50 text-text-primary shadow-soft backdrop-blur-xl md:hidden"
+                        >
+                            {menuOpen ? (
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1.8"
+                                    className="size-5"
+                                    aria-hidden="true"
+                                >
+                                    <path d="M6 6l12 12M18 6 6 18" />
+                                </svg>
+                            ) : (
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1.8"
+                                    className="size-5"
+                                    aria-hidden="true"
+                                >
+                                    <path d="M4 7h16M4 12h16M4 17h16" />
+                                </svg>
+                            )}
+                        </button>
+                    </div>
+                
+                    {/* MOBILE MENU */}
+                    {menuOpen && (
+                        <div className="absolute left-[4%] right-[4%] top-[calc(100%+0.75rem)] overflow-hidden rounded-3xl border border-border-light bg-bg-surface/90 p-5 text-text-primary shadow-dropdown backdrop-blur-xl md:hidden">
+                            <div className="mb-3 flex items-center justify-between border-b border-border-light pb-4">
+                                <span className="text-xs font-semibold uppercase text-text-muted">
+                                    Navigation
+                                </span>
+                                <span className="font-editorial text-lg">ParkWatch</span>
+                            </div>
+                
+                            <nav aria-label="Mobile navigation" className="flex flex-col">
+                                {[
+                                    ["Platform", "#platform"],
+                                    ["Insights", "#insights"],
+                                    ["Parks", "#parks"],
+                                    ["Contact", "#contact"],
+                                ].map(([label, href], index) => (
                                     <a
-                                        href="https://cloud.laravel.com"
-                                        target="_blank"
-                                        className="inline-block rounded-sm border border-black bg-[#1b1b18] px-5 py-1.5 text-sm leading-normal text-white hover:border-black hover:bg-black dark:border-[#eeeeec] dark:bg-[#eeeeec] dark:text-[#1C1C1A] dark:hover:border-white dark:hover:bg-white"
+                                        key={href}
+                                        href={href}
+                                        onClick={() => setMenuOpen(false)}
+                                        className={`flex items-center justify-between py-3.5 text-base font-medium transition-opacity hover:opacity-65 ${
+                                            index < 3 ? "border-b border-border-light" : ""
+                                        }`}
                                     >
-                                        Deploy now
+                                        {label}
+                                        <svg
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="1.8"
+                                            className="size-4 text-text-muted"
+                                            aria-hidden="true"
+                                        >
+                                            <path d="M5 12h14M13 6l6 6-6 6" />
+                                        </svg>
                                     </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="relative -mb-px aspect-[335/364] w-full shrink-0 overflow-hidden rounded-t-lg bg-[#fff2f2] lg:mb-0 lg:-ml-px lg:aspect-auto lg:w-[438px] lg:rounded-t-none lg:rounded-r-lg dark:bg-[#1D0002]">
-                            {/* Laravel Logo */}
-                            <svg
-                                className="w-full max-w-none translate-y-0 text-[#F53003] opacity-100 transition-all duration-750 dark:text-[#F61500] starting:opacity-0 motion-safe:starting:translate-y-6"
-                                viewBox="0 0 438 104"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
+                                ))}
+                            </nav>
+                
+                            <Link
+                                href={authHref}
+                                onClick={() => setMenuOpen(false)}
+                                className="mt-4 flex items-center justify-center rounded-pill bg-action-dark px-5 py-3 text-sm font-semibold text-action-dark-foreground shadow-cta"
                             >
-                                <path
-                                    d="M17.2036 -3H0V102.197H49.5189V86.7187H17.2036V-3Z"
-                                    fill="currentColor"
-                                />
-                                <path
-                                    d="M110.256 41.6337C108.061 38.1275 104.945 35.3731 100.905 33.3681C96.8667 31.3647 92.8016 30.3618 88.7131 30.3618C83.4247 30.3618 78.5885 31.3389 74.201 33.2923C69.8111 35.2456 66.0474 37.928 62.9059 41.3333C59.7643 44.7401 57.3198 48.6726 55.5754 53.1293C53.8287 57.589 52.9572 62.274 52.9572 67.1813C52.9572 72.1925 53.8287 76.8995 55.5754 81.3069C57.3191 85.7173 59.7636 89.6241 62.9059 93.0293C66.0474 96.4361 69.8119 99.1155 74.201 101.069C78.5885 103.022 83.4247 103.999 88.7131 103.999C92.8016 103.999 96.8667 102.997 100.905 100.994C104.945 98.9911 108.061 96.2359 110.256 92.7282V102.195H126.563V32.1642H110.256V41.6337ZM108.76 75.7472C107.762 78.4531 106.366 80.8078 104.572 82.8112C102.776 84.8161 100.606 86.4183 98.0637 87.6206C95.5202 88.823 92.7004 89.4238 89.6103 89.4238C86.5178 89.4238 83.7252 88.823 81.2324 87.6206C78.7388 86.4183 76.5949 84.8161 74.7998 82.8112C73.004 80.8078 71.6319 78.4531 70.6856 75.7472C69.7356 73.0421 69.2644 70.1868 69.2644 67.1821C69.2644 64.1758 69.7356 61.3205 70.6856 58.6154C71.6319 55.9102 73.004 53.5571 74.7998 51.5522C76.5949 49.5495 78.738 47.9451 81.2324 46.7427C83.7252 45.5404 86.5178 44.9396 89.6103 44.9396C92.7012 44.9396 95.5202 45.5404 98.0637 46.7427C100.606 47.9451 102.776 49.5487 104.572 51.5522C106.367 53.5571 107.762 55.9102 108.76 58.6154C109.756 61.3205 110.256 64.1758 110.256 67.1821C110.256 70.1868 109.756 73.0421 108.76 75.7472Z"
-                                    fill="currentColor"
-                                />
-                                <path
-                                    d="M242.805 41.6337C240.611 38.1275 237.494 35.3731 233.455 33.3681C229.416 31.3647 225.351 30.3618 221.262 30.3618C215.974 30.3618 211.138 31.3389 206.75 33.2923C202.36 35.2456 198.597 37.928 195.455 41.3333C192.314 44.7401 189.869 48.6726 188.125 53.1293C186.378 57.589 185.507 62.274 185.507 67.1813C185.507 72.1925 186.378 76.8995 188.125 81.3069C189.868 85.7173 192.313 89.6241 195.455 93.0293C198.597 96.4361 202.361 99.1155 206.75 101.069C211.138 103.022 215.974 103.999 221.262 103.999C225.351 103.999 229.416 102.997 233.455 100.994C237.494 98.9911 240.611 96.2359 242.805 92.7282V102.195H259.112V32.1642H242.805V41.6337ZM241.31 75.7472C240.312 78.4531 238.916 80.8078 237.122 82.8112C235.326 84.8161 233.156 86.4183 230.614 87.6206C228.07 88.823 225.251 89.4238 222.16 89.4238C219.068 89.4238 216.275 88.823 213.782 87.6206C211.289 86.4183 209.145 84.8161 207.35 82.8112C205.554 80.8078 204.182 78.4531 203.236 75.7472C202.286 73.0421 201.814 70.1868 201.814 67.1821C201.814 64.1758 202.286 61.3205 203.236 58.6154C204.182 55.9102 205.554 53.5571 207.35 51.5522C209.145 49.5495 211.288 47.9451 213.782 46.7427C216.275 45.5404 219.068 44.9396 222.16 44.9396C225.251 44.9396 228.07 45.5404 230.614 46.7427C233.156 47.9451 235.326 49.5487 237.122 51.5522C238.917 53.5571 240.312 55.9102 241.31 58.6154C242.306 61.3205 242.806 64.1758 242.806 67.1821C242.805 70.1868 242.305 73.0421 241.31 75.7472Z"
-                                    fill="currentColor"
-                                />
-                                <path
-                                    d="M438 -3H421.694V102.197H438V-3Z"
-                                    fill="currentColor"
-                                />
-                                <path
-                                    d="M139.43 102.197H155.735V48.2834H183.712V32.1665H139.43V102.197Z"
-                                    fill="currentColor"
-                                />
-                                <path
-                                    d="M324.49 32.1665L303.995 85.794L283.498 32.1665H266.983L293.748 102.197H314.242L341.006 32.1665H324.49Z"
-                                    fill="currentColor"
-                                />
-                                <path
-                                    d="M376.571 30.3656C356.603 30.3656 340.797 46.8497 340.797 67.1828C340.797 89.6597 356.094 104 378.661 104C391.29 104 399.354 99.1488 409.206 88.5848L398.189 80.0226C398.183 80.031 389.874 90.9895 377.468 90.9895C363.048 90.9895 356.977 79.3111 356.977 73.269H411.075C413.917 50.1328 398.775 30.3656 376.571 30.3656ZM357.02 61.0967C357.145 59.7487 359.023 43.3761 376.442 43.3761C393.861 43.3761 395.978 59.7464 396.099 61.0967H357.02Z"
-                                    fill="currentColor"
-                                />
-                            </svg>
-
-                            {/* 13 */}
-                            <svg
-                                className="relative -mt-[6.6rem] -ml-8 w-[438px] max-w-none [--stroke-color:#1B1B18] lg:ml-0 dark:[--stroke-color:#FF750F]"
-                                viewBox="0 0 440 392"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <g className="text-[#1B1B18] opacity-100 mix-blend-darken transition-all delay-300 duration-750 dark:text-black dark:mix-blend-normal starting:opacity-0">
-                                    <mask
-                                        id="path-1-mask"
-                                        maskUnits="userSpaceOnUse"
-                                        x="-0.328613"
-                                        y="103"
-                                        width="338"
-                                        height="299"
-                                        fill="black"
-                                    >
-                                        <rect
-                                            fill="white"
-                                            x="-0.328613"
-                                            y="103"
-                                            width="338"
-                                            height="299"
-                                        />
-                                        <path d="M234.936 400.8C204.136 400.8 178.936 392.4 159.336 375.6C140.136 358.8 130.536 337 130.536 310.2H200.736C200.736 318.2 203.736 324.8 209.736 330C215.736 335.2 223.736 337.8 233.736 337.8C243.336 337.8 251.136 335 257.136 329.4C263.536 323.8 266.736 316.6 266.736 307.8C266.736 299.8 263.936 293.2 258.336 288C252.736 282.8 245.536 280.2 236.736 280.2H199.536V218.4H236.736C243.536 218.4 249.336 216 254.136 211.2C258.936 206.4 261.336 200.4 261.336 193.2C261.336 184.8 258.736 178.2 253.536 173.4C248.336 168.6 241.736 166.2 233.736 166.2C226.536 166.2 220.336 168.4 215.136 172.8C210.336 177.2 207.936 182.8 207.936 189.6H141.336C141.336 164.8 150.136 144.6 167.736 129C185.336 113 207.936 105 235.536 105C263.136 105 285.536 112.2 302.736 126.6C320.336 141 329.136 160 329.136 183.6C329.136 200.8 324.536 214.8 315.336 225.6C306.136 236 294.336 243.2 279.936 247.2C297.136 252 310.736 260.2 320.736 271.8C331.136 283.4 336.336 298 336.336 315.6C336.336 340.4 326.936 360.8 308.136 376.8C289.336 392.8 264.936 400.8 234.936 400.8Z" />
-                                        <path d="M26.8714 167.6H1.67139V105.2H94.6714V400.2H26.8714V167.6Z" />
-                                    </mask>
-                                    <path
-                                        d="M234.936 400.8C204.136 400.8 178.936 392.4 159.336 375.6C140.136 358.8 130.536 337 130.536 310.2H200.736C200.736 318.2 203.736 324.8 209.736 330C215.736 335.2 223.736 337.8 233.736 337.8C243.336 337.8 251.136 335 257.136 329.4C263.536 323.8 266.736 316.6 266.736 307.8C266.736 299.8 263.936 293.2 258.336 288C252.736 282.8 245.536 280.2 236.736 280.2H199.536V218.4H236.736C243.536 218.4 249.336 216 254.136 211.2C258.936 206.4 261.336 200.4 261.336 193.2C261.336 184.8 258.736 178.2 253.536 173.4C248.336 168.6 241.736 166.2 233.736 166.2C226.536 166.2 220.336 168.4 215.136 172.8C210.336 177.2 207.936 182.8 207.936 189.6H141.336C141.336 164.8 150.136 144.6 167.736 129C185.336 113 207.936 105 235.536 105C263.136 105 285.536 112.2 302.736 126.6C320.336 141 329.136 160 329.136 183.6C329.136 200.8 324.536 214.8 315.336 225.6C306.136 236 294.336 243.2 279.936 247.2C297.136 252 310.736 260.2 320.736 271.8C331.136 283.4 336.336 298 336.336 315.6C336.336 340.4 326.936 360.8 308.136 376.8C289.336 392.8 264.936 400.8 234.936 400.8Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M26.8714 167.6H1.67139V105.2H94.6714V400.2H26.8714V167.6Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M234.936 400.8C204.136 400.8 178.936 392.4 159.336 375.6C140.136 358.8 130.536 337 130.536 310.2H200.736C200.736 318.2 203.736 324.8 209.736 330C215.736 335.2 223.736 337.8 233.736 337.8C243.336 337.8 251.136 335 257.136 329.4C263.536 323.8 266.736 316.6 266.736 307.8C266.736 299.8 263.936 293.2 258.336 288C252.736 282.8 245.536 280.2 236.736 280.2H199.536V218.4H236.736C243.536 218.4 249.336 216 254.136 211.2C258.936 206.4 261.336 200.4 261.336 193.2C261.336 184.8 258.736 178.2 253.536 173.4C248.336 168.6 241.736 166.2 233.736 166.2C226.536 166.2 220.336 168.4 215.136 172.8C210.336 177.2 207.936 182.8 207.936 189.6H141.336C141.336 164.8 150.136 144.6 167.736 129C185.336 113 207.936 105 235.536 105C263.136 105 285.536 112.2 302.736 126.6C320.336 141 329.136 160 329.136 183.6C329.136 200.8 324.536 214.8 315.336 225.6C306.136 236 294.336 243.2 279.936 247.2C297.136 252 310.736 260.2 320.736 271.8C331.136 283.4 336.336 298 336.336 315.6C336.336 340.4 326.936 360.8 308.136 376.8C289.336 392.8 264.936 400.8 234.936 400.8Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-1-mask)"
-                                    />
-                                    <path
-                                        d="M26.8714 167.6H1.67139V105.2H94.6714V400.2H26.8714V167.6Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-1-mask)"
-                                    />
-                                </g>
-
-                                <g className="text-[#F3BEC7] opacity-100 transition-all delay-400 duration-750 dark:text-[#4B0600] starting:opacity-0 motion-safe:starting:-translate-x-[26px]">
-                                    <mask
-                                        id="path-2-mask"
-                                        maskUnits="userSpaceOnUse"
-                                        x="25.3357"
-                                        y="103"
-                                        width="338"
-                                        height="299"
-                                        fill="black"
-                                    >
-                                        <rect
-                                            fill="white"
-                                            x="25.3357"
-                                            y="103"
-                                            width="338"
-                                            height="299"
-                                        />
-                                        <path d="M260.6 400.8C229.8 400.8 204.6 392.4 185 375.6C165.8 358.8 156.2 337 156.2 310.2H226.4C226.4 318.2 229.4 324.8 235.4 330C241.4 335.2 249.4 337.8 259.4 337.8C269 337.8 276.8 335 282.8 329.4C289.2 323.8 292.4 316.6 292.4 307.8C292.4 299.8 289.6 293.2 284 288C278.4 282.8 271.2 280.2 262.4 280.2H225.2V218.4H262.4C269.2 218.4 275 216 279.8 211.2C284.6 206.4 287 200.4 287 193.2C287 184.8 284.4 178.2 279.2 173.4C274 168.6 267.4 166.2 259.4 166.2C252.2 166.2 246 168.4 240.8 172.8C236 177.2 233.6 182.8 233.6 189.6H167C167 164.8 175.8 144.6 193.4 129C211 113 233.6 105 261.2 105C288.8 105 311.2 112.2 328.4 126.6C346 141 354.8 160 354.8 183.6C354.8 200.8 350.2 214.8 341 225.6C331.8 236 320 243.2 305.6 247.2C322.8 252 336.4 260.2 346.4 271.8C356.8 283.4 362 298 362 315.6C362 340.4 352.6 360.8 333.8 376.8C315 392.8 290.6 400.8 260.6 400.8Z" />
-                                        <path d="M52.5357 167.6H27.3357V105.2H120.336V400.2H52.5357V167.6Z" />
-                                    </mask>
-                                    <path
-                                        d="M260.6 400.8C229.8 400.8 204.6 392.4 185 375.6C165.8 358.8 156.2 337 156.2 310.2H226.4C226.4 318.2 229.4 324.8 235.4 330C241.4 335.2 249.4 337.8 259.4 337.8C269 337.8 276.8 335 282.8 329.4C289.2 323.8 292.4 316.6 292.4 307.8C292.4 299.8 289.6 293.2 284 288C278.4 282.8 271.2 280.2 262.4 280.2H225.2V218.4H262.4C269.2 218.4 275 216 279.8 211.2C284.6 206.4 287 200.4 287 193.2C287 184.8 284.4 178.2 279.2 173.4C274 168.6 267.4 166.2 259.4 166.2C252.2 166.2 246 168.4 240.8 172.8C236 177.2 233.6 182.8 233.6 189.6H167C167 164.8 175.8 144.6 193.4 129C211 113 233.6 105 261.2 105C288.8 105 311.2 112.2 328.4 126.6C346 141 354.8 160 354.8 183.6C354.8 200.8 350.2 214.8 341 225.6C331.8 236 320 243.2 305.6 247.2C322.8 252 336.4 260.2 346.4 271.8C356.8 283.4 362 298 362 315.6C362 340.4 352.6 360.8 333.8 376.8C315 392.8 290.6 400.8 260.6 400.8Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M52.5357 167.6H27.3357V105.2H120.336V400.2H52.5357V167.6Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M260.6 400.8C229.8 400.8 204.6 392.4 185 375.6C165.8 358.8 156.2 337 156.2 310.2H226.4C226.4 318.2 229.4 324.8 235.4 330C241.4 335.2 249.4 337.8 259.4 337.8C269 337.8 276.8 335 282.8 329.4C289.2 323.8 292.4 316.6 292.4 307.8C292.4 299.8 289.6 293.2 284 288C278.4 282.8 271.2 280.2 262.4 280.2H225.2V218.4H262.4C269.2 218.4 275 216 279.8 211.2C284.6 206.4 287 200.4 287 193.2C287 184.8 284.4 178.2 279.2 173.4C274 168.6 267.4 166.2 259.4 166.2C252.2 166.2 246 168.4 240.8 172.8C236 177.2 233.6 182.8 233.6 189.6H167C167 164.8 175.8 144.6 193.4 129C211 113 233.6 105 261.2 105C288.8 105 311.2 112.2 328.4 126.6C346 141 354.8 160 354.8 183.6C354.8 200.8 350.2 214.8 341 225.6C331.8 236 320 243.2 305.6 247.2C322.8 252 336.4 260.2 346.4 271.8C356.8 283.4 362 298 362 315.6C362 340.4 352.6 360.8 333.8 376.8C315 392.8 290.6 400.8 260.6 400.8Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-2-mask)"
-                                    />
-                                    <path
-                                        d="M52.5357 167.6H27.3357V105.2H120.336V400.2H52.5357V167.6Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-2-mask)"
-                                    />
-                                </g>
-
-                                <g className="text-[#F8B803] opacity-100 mix-blend-color transition-all delay-400 duration-750 dark:text-[#391800] dark:mix-blend-hard-light starting:opacity-0 motion-safe:starting:-translate-x-[51px]">
-                                    <mask
-                                        id="path-3-mask"
-                                        maskUnits="userSpaceOnUse"
-                                        x="51"
-                                        y="103"
-                                        width="338"
-                                        height="299"
-                                        fill="black"
-                                    >
-                                        <rect
-                                            fill="white"
-                                            x="51"
-                                            y="103"
-                                            width="338"
-                                            height="299"
-                                        />
-                                        <path d="M286.264 400.8C255.464 400.8 230.264 392.4 210.664 375.6C191.464 358.8 181.864 337 181.864 310.2H252.064C252.064 318.2 255.064 324.8 261.064 330C267.064 335.2 275.064 337.8 285.064 337.8C294.664 337.8 302.464 335 308.464 329.4C314.864 323.8 318.064 316.6 318.064 307.8C318.064 299.8 315.264 293.2 309.664 288C304.064 282.8 296.864 280.2 288.064 280.2H250.864V218.4H288.064C294.864 218.4 300.664 216 305.464 211.2C310.264 206.4 312.664 200.4 312.664 193.2C312.664 184.8 310.064 178.2 304.864 173.4C299.664 168.6 293.064 166.2 285.064 166.2C277.864 166.2 271.664 168.4 266.464 172.8C261.664 177.2 259.264 182.8 259.264 189.6H192.664C192.664 164.8 201.464 144.6 219.064 129C236.664 113 259.264 105 286.864 105C314.464 105 336.864 112.2 354.064 126.6C371.664 141 380.464 160 380.464 183.6C380.464 200.8 375.864 214.8 366.664 225.6C357.464 236 345.664 243.2 331.264 247.2C348.464 252 362.064 260.2 372.064 271.8C382.464 283.4 387.664 298 387.664 315.6C387.664 340.4 378.264 360.8 359.464 376.8C340.664 392.8 316.264 400.8 286.264 400.8Z" />
-                                        <path d="M78.2 167.6H53V105.2H146V400.2H78.2V167.6Z" />
-                                    </mask>
-                                    <path
-                                        d="M286.264 400.8C255.464 400.8 230.264 392.4 210.664 375.6C191.464 358.8 181.864 337 181.864 310.2H252.064C252.064 318.2 255.064 324.8 261.064 330C267.064 335.2 275.064 337.8 285.064 337.8C294.664 337.8 302.464 335 308.464 329.4C314.864 323.8 318.064 316.6 318.064 307.8C318.064 299.8 315.264 293.2 309.664 288C304.064 282.8 296.864 280.2 288.064 280.2H250.864V218.4H288.064C294.864 218.4 300.664 216 305.464 211.2C310.264 206.4 312.664 200.4 312.664 193.2C312.664 184.8 310.064 178.2 304.864 173.4C299.664 168.6 293.064 166.2 285.064 166.2C277.864 166.2 271.664 168.4 266.464 172.8C261.664 177.2 259.264 182.8 259.264 189.6H192.664C192.664 164.8 201.464 144.6 219.064 129C236.664 113 259.264 105 286.864 105C314.464 105 336.864 112.2 354.064 126.6C371.664 141 380.464 160 380.464 183.6C380.464 200.8 375.864 214.8 366.664 225.6C357.464 236 345.664 243.2 331.264 247.2C348.464 252 362.064 260.2 372.064 271.8C382.464 283.4 387.664 298 387.664 315.6C387.664 340.4 378.264 360.8 359.464 376.8C340.664 392.8 316.264 400.8 286.264 400.8Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M78.2 167.6H53V105.2H146V400.2H78.2V167.6Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M286.264 400.8C255.464 400.8 230.264 392.4 210.664 375.6C191.464 358.8 181.864 337 181.864 310.2H252.064C252.064 318.2 255.064 324.8 261.064 330C267.064 335.2 275.064 337.8 285.064 337.8C294.664 337.8 302.464 335 308.464 329.4C314.864 323.8 318.064 316.6 318.064 307.8C318.064 299.8 315.264 293.2 309.664 288C304.064 282.8 296.864 280.2 288.064 280.2H250.864V218.4H288.064C294.864 218.4 300.664 216 305.464 211.2C310.264 206.4 312.664 200.4 312.664 193.2C312.664 184.8 310.064 178.2 304.864 173.4C299.664 168.6 293.064 166.2 285.064 166.2C277.864 166.2 271.664 168.4 266.464 172.8C261.664 177.2 259.264 182.8 259.264 189.6H192.664C192.664 164.8 201.464 144.6 219.064 129C236.664 113 259.264 105 286.864 105C314.464 105 336.864 112.2 354.064 126.6C371.664 141 380.464 160 380.464 183.6C380.464 200.8 375.864 214.8 366.664 225.6C357.464 236 345.664 243.2 331.264 247.2C348.464 252 362.064 260.2 372.064 271.8C382.464 283.4 387.664 298 387.664 315.6C387.664 340.4 378.264 360.8 359.464 376.8C340.664 392.8 316.264 400.8 286.264 400.8Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-3-mask)"
-                                    />
-                                    <path
-                                        d="M78.2 167.6H53V105.2H146V400.2H78.2V167.6Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-3-mask)"
-                                    />
-                                </g>
-
-                                <g className="text-[#F3BEC7] opacity-100 mix-blend-multiply transition-all delay-400 duration-750 dark:text-[#733000] dark:mix-blend-normal starting:opacity-0 motion-safe:starting:-translate-x-[78px]">
-                                    <mask
-                                        id="path-4-mask"
-                                        maskUnits="userSpaceOnUse"
-                                        x="76.6643"
-                                        y="103"
-                                        width="338"
-                                        height="299"
-                                        fill="black"
-                                    >
-                                        <rect
-                                            fill="white"
-                                            x="76.6643"
-                                            y="103"
-                                            width="338"
-                                            height="299"
-                                        />
-                                        <path d="M311.929 400.8C281.129 400.8 255.929 392.4 236.329 375.6C217.129 358.8 207.529 337 207.529 310.2H277.729C277.729 318.2 280.729 324.8 286.729 330C292.729 335.2 300.729 337.8 310.729 337.8C320.329 337.8 328.129 335 334.129 329.4C340.529 323.8 343.729 316.6 343.729 307.8C343.729 299.8 340.929 293.2 335.329 288C329.729 282.8 322.529 280.2 313.729 280.2H276.529V218.4H313.729C320.529 218.4 326.329 216 331.129 211.2C335.929 206.4 338.329 200.4 338.329 193.2C338.329 184.8 335.729 178.2 330.529 173.4C325.329 168.6 318.729 166.2 310.729 166.2C303.529 166.2 297.329 168.4 292.129 172.8C287.329 177.2 284.929 182.8 284.929 189.6H218.329C218.329 164.8 227.129 144.6 244.729 129C262.329 113 284.929 105 312.529 105C340.129 105 362.529 112.2 379.729 126.6C397.329 141 406.129 160 406.129 183.6C406.129 200.8 401.529 214.8 392.329 225.6C383.129 236 371.329 243.2 356.929 247.2C374.129 252 387.729 260.2 397.729 271.8C408.129 283.4 413.329 298 413.329 315.6C413.329 340.4 403.929 360.8 385.129 376.8C366.329 392.8 341.929 400.8 311.929 400.8Z" />
-                                        <path d="M103.864 167.6H78.6643V105.2H171.664V400.2H103.864V167.6Z" />
-                                    </mask>
-                                    <path
-                                        d="M311.929 400.8C281.129 400.8 255.929 392.4 236.329 375.6C217.129 358.8 207.529 337 207.529 310.2H277.729C277.729 318.2 280.729 324.8 286.729 330C292.729 335.2 300.729 337.8 310.729 337.8C320.329 337.8 328.129 335 334.129 329.4C340.529 323.8 343.729 316.6 343.729 307.8C343.729 299.8 340.929 293.2 335.329 288C329.729 282.8 322.529 280.2 313.729 280.2H276.529V218.4H313.729C320.529 218.4 326.329 216 331.129 211.2C335.929 206.4 338.329 200.4 338.329 193.2C338.329 184.8 335.729 178.2 330.529 173.4C325.329 168.6 318.729 166.2 310.729 166.2C303.529 166.2 297.329 168.4 292.129 172.8C287.329 177.2 284.929 182.8 284.929 189.6H218.329C218.329 164.8 227.129 144.6 244.729 129C262.329 113 284.929 105 312.529 105C340.129 105 362.529 112.2 379.729 126.6C397.329 141 406.129 160 406.129 183.6C406.129 200.8 401.529 214.8 392.329 225.6C383.129 236 371.329 243.2 356.929 247.2C374.129 252 387.729 260.2 397.729 271.8C408.129 283.4 413.329 298 413.329 315.6C413.329 340.4 403.929 360.8 385.129 376.8C366.329 392.8 341.929 400.8 311.929 400.8Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M103.864 167.6H78.6643V105.2H171.664V400.2H103.864V167.6Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M311.929 400.8C281.129 400.8 255.929 392.4 236.329 375.6C217.129 358.8 207.529 337 207.529 310.2H277.729C277.729 318.2 280.729 324.8 286.729 330C292.729 335.2 300.729 337.8 310.729 337.8C320.329 337.8 328.129 335 334.129 329.4C340.529 323.8 343.729 316.6 343.729 307.8C343.729 299.8 340.929 293.2 335.329 288C329.729 282.8 322.529 280.2 313.729 280.2H276.529V218.4H313.729C320.529 218.4 326.329 216 331.129 211.2C335.929 206.4 338.329 200.4 338.329 193.2C338.329 184.8 335.729 178.2 330.529 173.4C325.329 168.6 318.729 166.2 310.729 166.2C303.529 166.2 297.329 168.4 292.129 172.8C287.329 177.2 284.929 182.8 284.929 189.6H218.329C218.329 164.8 227.129 144.6 244.729 129C262.329 113 284.929 105 312.529 105C340.129 105 362.529 112.2 379.729 126.6C397.329 141 406.129 160 406.129 183.6C406.129 200.8 401.529 214.8 392.329 225.6C383.129 236 371.329 243.2 356.929 247.2C374.129 252 387.729 260.2 397.729 271.8C408.129 283.4 413.329 298 413.329 315.6C413.329 340.4 403.929 360.8 385.129 376.8C366.329 392.8 341.929 400.8 311.929 400.8Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-4-mask)"
-                                    />
-                                    <path
-                                        d="M103.864 167.6H78.6643V105.2H171.664V400.2H103.864V167.6Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-4-mask)"
-                                    />
-                                </g>
-
-                                <g className="text-[#F3BEC7] opacity-100 mix-blend-hard-light transition-all delay-400 duration-750 dark:text-[#4B0600] starting:opacity-0 motion-safe:starting:-translate-x-[102px]">
-                                    <mask
-                                        id="path-5-mask"
-                                        maskUnits="userSpaceOnUse"
-                                        x="102.329"
-                                        y="103"
-                                        width="338"
-                                        height="299"
-                                        fill="black"
-                                    >
-                                        <rect
-                                            fill="white"
-                                            x="102.329"
-                                            y="103"
-                                            width="338"
-                                            height="299"
-                                        />
-                                        <path d="M337.593 400.8C306.793 400.8 281.593 392.4 261.993 375.6C242.793 358.8 233.193 337 233.193 310.2H303.393C303.393 318.2 306.393 324.8 312.393 330C318.393 335.2 326.393 337.8 336.393 337.8C345.993 337.8 353.793 335 359.793 329.4C366.193 323.8 369.393 316.6 369.393 307.8C369.393 299.8 366.593 293.2 360.993 288C355.393 282.8 348.193 280.2 339.393 280.2H302.193V218.4H339.393C346.193 218.4 351.993 216 356.793 211.2C361.593 206.4 363.993 200.4 363.993 193.2C363.993 184.8 361.393 178.2 356.193 173.4C350.993 168.6 344.393 166.2 336.393 166.2C329.193 166.2 322.993 168.4 317.793 172.8C312.993 177.2 310.593 182.8 310.593 189.6H243.993C243.993 164.8 252.793 144.6 270.393 129C287.993 113 310.593 105 338.193 105C365.793 105 388.193 112.2 405.393 126.6C422.993 141 431.793 160 431.793 183.6C431.793 200.8 427.193 214.8 417.993 225.6C408.793 236 396.993 243.2 382.593 247.2C399.793 252 413.393 260.2 423.393 271.8C433.793 283.4 438.993 298 438.993 315.6C438.993 340.4 429.593 360.8 410.793 376.8C391.993 392.8 367.593 400.8 337.593 400.8Z" />
-                                        <path d="M129.529 167.6H104.329V105.2H197.329V400.2H129.529V167.6Z" />
-                                    </mask>
-                                    <path
-                                        d="M337.593 400.8C306.793 400.8 281.593 392.4 261.993 375.6C242.793 358.8 233.193 337 233.193 310.2H303.393C303.393 318.2 306.393 324.8 312.393 330C318.393 335.2 326.393 337.8 336.393 337.8C345.993 337.8 353.793 335 359.793 329.4C366.193 323.8 369.393 316.6 369.393 307.8C369.393 299.8 366.593 293.2 360.993 288C355.393 282.8 348.193 280.2 339.393 280.2H302.193V218.4H339.393C346.193 218.4 351.993 216 356.793 211.2C361.593 206.4 363.993 200.4 363.993 193.2C363.993 184.8 361.393 178.2 356.193 173.4C350.993 168.6 344.393 166.2 336.393 166.2C329.193 166.2 322.993 168.4 317.793 172.8C312.993 177.2 310.593 182.8 310.593 189.6H243.993C243.993 164.8 252.793 144.6 270.393 129C287.993 113 310.593 105 338.193 105C365.793 105 388.193 112.2 405.393 126.6C422.993 141 431.793 160 431.793 183.6C431.793 200.8 427.193 214.8 417.993 225.6C408.793 236 396.993 243.2 382.593 247.2C399.793 252 413.393 260.2 423.393 271.8C433.793 283.4 438.993 298 438.993 315.6C438.993 340.4 429.593 360.8 410.793 376.8C391.993 392.8 367.593 400.8 337.593 400.8Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M129.529 167.6H104.329V105.2H197.329V400.2H129.529V167.6Z"
-                                        fill="currentColor"
-                                    />
-                                    <path
-                                        d="M337.593 400.8C306.793 400.8 281.593 392.4 261.993 375.6C242.793 358.8 233.193 337 233.193 310.2H303.393C303.393 318.2 306.393 324.8 312.393 330C318.393 335.2 326.393 337.8 336.393 337.8C345.993 337.8 353.793 335 359.793 329.4C366.193 323.8 369.393 316.6 369.393 307.8C369.393 299.8 366.593 293.2 360.993 288C355.393 282.8 348.193 280.2 339.393 280.2H302.193V218.4H339.393C346.193 218.4 351.993 216 356.793 211.2C361.593 206.4 363.993 200.4 363.993 193.2C363.993 184.8 361.393 178.2 356.193 173.4C350.993 168.6 344.393 166.2 336.393 166.2C329.193 166.2 322.993 168.4 317.793 172.8C312.993 177.2 310.593 182.8 310.593 189.6H243.993C243.993 164.8 252.793 144.6 270.393 129C287.993 113 310.593 105 338.193 105C365.793 105 388.193 112.2 405.393 126.6C422.993 141 431.793 160 431.793 183.6C431.793 200.8 427.193 214.8 417.993 225.6C408.793 236 396.993 243.2 382.593 247.2C399.793 252 413.393 260.2 423.393 271.8C433.793 283.4 438.993 298 438.993 315.6C438.993 340.4 429.593 360.8 410.793 376.8C391.993 392.8 367.593 400.8 337.593 400.8Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-5-mask)"
-                                    />
-                                    <path
-                                        d="M129.529 167.6H104.329V105.2H197.329V400.2H129.529V167.6Z"
-                                        stroke="var(--stroke-color)"
-                                        strokeWidth="2.4"
-                                        mask="url(#path-5-mask)"
-                                    />
-                                </g>
-                            </svg>
-                            <div className="absolute inset-0 rounded-t-lg shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] lg:rounded-t-none lg:rounded-r-lg dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]"></div>
+                                {authLabel}
+                            </Link>
                         </div>
-                    </main>
+                    )}
+                </header>
+
+                {/* HERO CONTENT */}
+                <div className="relative z-10 mx-auto mt-10 max-w-4xl px-6 text-center md:mt-14">
+                    <div className="inline-flex items-center gap-2 rounded-pill border border-black/10 bg-white/60 px-4 py-1.5 text-xs font-medium text-text-primary backdrop-blur-md">
+                        <span className="relative flex size-2">
+                            <span className="absolute inline-flex size-full rounded-full bg-status-green" />
+                            <span className="relative inline-flex size-2 rounded-full bg-status-green" />
+                        </span>
+                        14 parks streaming live right now
+                    </div>
+
+                    <h1 className="mt-6 text-5xl font-medium leading-[1.05] text-text-primary md:text-7xl lg:text-8xl">
+                        Discover healthier
+                        <br />
+                        parks{" "}
+                        <em className="font-editorial font-medium">
+                            in real time
+                        </em>
+                    </h1>
+
+                    <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-text-secondary md:text-base">
+                        ParkWatch turns sensors, cameras and visitor data into
+                        one live picture — so your team can see occupancy, air
+                        quality and flow across every park, from anywhere.
+                    </p>
+
+                    {/* CTA ROW */}
+                    <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                        <button
+                            type="button"
+                            className="inline-flex items-center gap-2 rounded-pill bg-action-dark px-6 py-3 text-sm font-medium text-action-dark-foreground shadow-cta transition-all duration-200 hover:-translate-y-0.5"
+                            onClick={() =>
+                                document
+                                    .querySelector("#platform")
+                                    ?.scrollIntoView({
+                                        behavior: "smooth",
+                                    })
+                            }
+                        >
+                            Explore ParkWatch
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.8"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                aria-hidden="true"
+                            >
+                                <path d="M5 12h14" />
+                                <path d="m13 6 6 6-6 6" />
+                            </svg>
+                        </button>
+
+                        <a
+                            href="#platform"
+                            className="inline-flex items-center gap-2 rounded-pill border border-black/10 bg-white/60 px-6 py-3 text-sm font-medium text-text-primary backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/80"
+                        >
+                            See how it works
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.8"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                aria-hidden="true"
+                            >
+                                <path d="M12 5v14" />
+                                <path d="m6 13 6 6 6-6" />
+                            </svg>
+                        </a>
+                    </div>
+
+                    {/* INLINE LIVE STATS */}
+                    <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs text-text-secondary md:gap-x-8">
+                        <span>
+                            <b className="font-semibold text-text-primary">
+                                12
+                            </b>{" "}
+                            parks live
+                        </span>
+
+                        <span className="text-black/20">•</span>
+
+                        <span>
+                            <b className="font-semibold text-text-primary">
+                                2,842
+                            </b>{" "}
+                            visitors today
+                        </span>
+
+                        <span className="text-black/20">•</span>
+
+                        <span>
+                            <b className="font-semibold text-text-primary">
+                                92
+                            </b>{" "}
+                            avg. health score
+                        </span>
+                    </div>
                 </div>
-            </div>
-        </>
+
+                {/* PARK HEALTH CARD */}
+                <div className="absolute left-[4%] top-[52%] z-10 hidden w-56 rounded-lg border border-white/55 bg-white/75 p-4 text-xs shadow-soft backdrop-blur-xl xl:block ">
+                    <div className="mb-3 flex justify-between">
+                        <span>Park health score</span>
+
+                        <span className="flex items-center gap-1.5 text-status-green">
+                            <span className="relative flex size-1.5">
+                                <span className="absolute inline-flex size-full rounded-full bg-status-green animate-[pw-pulse-ring_2s_ease-out_infinite]" />
+                                <span className="relative inline-flex size-1.5 rounded-full bg-status-green" />
+                            </span>
+                            Live
+                        </span>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                        <div className="grid size-20 place-items-center rounded-full border-12 border-[#eadff2] text-2xl font-semibold">
+                            92
+                        </div>
+
+                        <div>
+                            <b className="block">Excellent</b>
+
+                            <span className="text-text-muted">
+                                +4 this month
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* AIR QUALITY CARD */}
+                <div className="absolute right-[7%] top-[70%] z-10 hidden w-52 rounded-lg border border-white/55 bg-white/75 p-4 text-xs shadow-soft backdrop-blur-xl xl:block ">
+                    <div className="mb-2 flex justify-between">
+                        <span>Air quality</span>
+
+                        <span className="font-semibold text-status-green">
+                            Good
+                        </span>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        <div className="grid size-12 place-items-center rounded-icon bg-status-green-bg font-semibold text-status-green">
+                            38
+                        </div>
+
+                        <div>
+                            <b className="block">AQI · PM2.5</b>
+
+                            <span className="text-text-muted">
+                                Fresh · light breeze
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* VISITOR FLOW */}
+                <div className="absolute right-[4%] top-[46%] z-10 hidden w-64 rounded-lg border border-white/55 bg-white/80 p-4 text-xs shadow-soft backdrop-blur-xl xl:block ">
+                    <div className="mb-3 flex justify-between">
+                        <span>Visitor flow</span>
+
+                        <b className="text-status-green">▲ 12% today</b>
+                    </div>
+
+                    <div className="flex h-16 items-end gap-1">
+                        {[55, 70, 92, 86, 62, 48, 34, 28, 23, 18].map(
+                            (height, index) => (
+                                <span
+                                    key={index}
+                                    className="flex-1 origin-bottom rounded-sm bg-[#7bc7e8] animate-[pw-bar_0.9s_ease-out_backwards]"
+                                    style={{
+                                        height: `${height}%`,
+                                        animationDelay: `${index * 90}ms`,
+                                    }}
+                                />
+                            ),
+                        )}
+                    </div>
+
+                    <div className="mt-2 flex justify-between text-[10px] text-text-muted">
+                        <span>8 AM</span>
+
+                        <span>Now</span>
+                    </div>
+                </div>
+
+                {/* LIVE PARK TICKER */}
+                <div className="absolute inset-x-0 bottom-7 z-10 overflow-hidden">
+                    <div className="mx-auto w-[92%] max-w-4xl mask-[linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
+                        <div className="flex w-max gap-3 animate-[pw-marquee_36s_linear_infinite]">
+                            {[0, 1].map((copy) => (
+                                <div
+                                    key={copy}
+                                    aria-hidden={copy === 1}
+                                    className="flex gap-3 pr-3"
+                                >
+                                    {[
+                                        {
+                                            name: "Riverside Park",
+                                            value: "62% occupied",
+                                            dot: "bg-status-green",
+                                        },
+                                        {
+                                            name: "Lakeview Gardens",
+                                            value: "214 visitors now",
+                                            dot: "bg-status-blue",
+                                        },
+                                        {
+                                            name: "Cedar Trail",
+                                            value: "Air quality · Good",
+                                            dot: "bg-status-green",
+                                        },
+                                        {
+                                            name: "Maple Commons",
+                                            value: "18 spots free",
+                                            dot: "bg-status-amber",
+                                        },
+                                        {
+                                            name: "Willow Fields",
+                                            value: "Health score 94",
+                                            dot: "bg-status-purple",
+                                        },
+                                    ].map((park) => (
+                                        <span
+                                            key={`${copy}-${park.name}`}
+                                            className="flex items-center gap-2 whitespace-nowrap rounded-pill border border-black/10 bg-white/70 px-4 py-2 text-xs text-text-primary shadow-soft backdrop-blur-md"
+                                        >
+                                            <span
+                                                className={`size-1.5 rounded-full ${park.dot}`}
+                                            />
+
+                                            <b className="font-semibold">
+                                                {park.name}
+                                            </b>
+
+                                            <span className="text-black/25">
+                                                ·
+                                            </span>
+
+                                            {park.value}
+                                        </span>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="platform" className="px-5 py-20 md:px-10 lg:py-28">
+                <div className="mb-14 grid gap-8 md:grid-cols-2 md:items-end">
+                    <div>
+                        <div className="mb-7 flex gap-2">
+                            <span className="rounded-full bg-[#dff2dc] px-4 py-2 text-[10px] font-semibold uppercase text-[#285f39]">
+                                Monitoring
+                            </span>
+
+                            <span className="rounded-full bg-[#eadff2] px-4 py-2 text-[10px] font-semibold uppercase text-[#684d79]">
+                                Protection
+                            </span>
+                        </div>
+
+                        <h2 className="text-5xl leading-[1] md:text-6xl">
+                            Data-driven
+                            <br />
+                            park <em className="font-serif">insights</em>
+                        </h2>
+                    </div>
+
+                    <p className="max-w-xl text-sm leading-7 text-[#77737d]">
+                        ParkWatch brings trail conditions, visitor activity,
+                        wildlife signals, and environmental readings into one
+                        clear view—helping teams respond faster and protect what
+                        matters.
+                    </p>
+                </div>
+
+                {/* INSIGHTS */}
+                <div
+                    id="insights"
+                    className="grid overflow-hidden rounded-2xl border-8 border-white bg-white shadow-[0_14px_40px_rgba(40,40,50,0.10)] lg:grid-cols-2"
+                >
+                    {/* LEFT */}
+                    <div className="flex flex-col justify-center gap-5 p-7 md:p-10">
+                        {[
+                            {
+                                number: "01",
+                                title: "Environmental monitoring",
+                                description:
+                                    "Follow air quality, water levels, weather, and habitat health across every zone.",
+                            },
+                            {
+                                number: "02",
+                                title: "Predictive alerts",
+                                description:
+                                    "Spot unusual movement, crowding, fire risk, and maintenance needs before they escalate.",
+                            },
+                            {
+                                number: "03",
+                                title: "Actionable response",
+                                description:
+                                    "Give rangers clear priorities and live context so field teams can act with confidence.",
+                            },
+                        ].map((item, index) => (
+                            <div
+                                key={item.number}
+                                className={
+                                    index === 1
+                                        ? "rounded-xl bg-[#2b2930] p-6 text-white"
+                                        : "p-3"
+                                }
+                            >
+                                <div className="flex gap-4">
+                                    <span className="text-xs opacity-50">
+                                        {item.number}
+                                    </span>
+
+                                    <div>
+                                        <h3 className="mb-2 font-semibold">
+                                            {item.title}
+                                        </h3>
+
+                                        <p className="text-xs leading-5 opacity-65">
+                                            {item.description}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* RIGHT GRAPH */}
+                    <div className="relative min-h-[430px] bg-gradient-to-br from-[#eadff2] via-white to-[#d9f0f8] p-8 md:p-14">
+                        <div className="absolute inset-x-[12%] top-[13%] rounded-2xl border border-white/60 bg-white/80 p-6 shadow-[0_14px_40px_rgba(40,40,50,0.10)] backdrop-blur-xl">
+                            <div className="mb-2 flex justify-between">
+                                <span>Habitat health</span>
+
+                                <span>•••</span>
+                            </div>
+
+                            <strong className="text-4xl">92.4%</strong>
+
+                            <span className="ml-3 rounded-full bg-[#dff2dc] px-2 py-1 text-xs text-[#285f39]">
+                                ↑ 8.4%
+                            </span>
+
+                            <div className="mt-10 flex h-32 items-end gap-2">
+                                {[38, 55, 46, 73, 89, 58, 78].map(
+                                    (height, index) => (
+                                        <div
+                                            key={index}
+                                            className="flex-1 rounded-t-lg bg-[#7bc7e8]/50"
+                                            style={{
+                                                height: `${height}%`,
+                                            }}
+                                        />
+                                    ),
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="parks" className="py-16 lg:py-24">
+                <div className="mb-12 px-6 text-center">
+                    <h2 className="text-5xl leading-none md:text-6xl">
+                        Protected
+                        <br />
+                        <em className="font-serif">park landscapes</em>
+                    </h2>
+
+                    <p className="mx-auto mt-6 max-w-md text-sm leading-6 text-[#77737d]">
+                        A live view of places under watch—from busy trailheads
+                        to sensitive wetlands.
+                    </p>
+                </div>
+
+                <div className="mx-auto max-w-7xl px-4">
+                    <div className="grid gap-5 md:grid-cols-3">
+                        {locations.map((location, index) => (
+                            <article
+                                key={location.name}
+                                className={`rounded-2xl border-8 border-white bg-white p-2 shadow-[0_14px_40px_rgba(40,40,50,0.10)] transition-opacity ${
+                                    slide === index
+                                        ? "opacity-100"
+                                        : "opacity-75"
+                                }`}
+                            >
+                                <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
+                                    <img
+                                        src={locationsImage}
+                                        alt={location.name}
+                                        loading="lazy"
+                                        width={1536}
+                                        height={768}
+                                        className="h-full w-[300%] max-w-none object-cover"
+                                        style={{
+                                            transform: `translateX(-${location.pos})`,
+                                        }}
+                                    />
+
+                                    <span className="absolute left-3 top-3 rounded-full bg-[#dff2dc] px-3 py-1 text-[10px] font-semibold text-[#285f39]">
+                                        {location.status}
+                                    </span>
+                                </div>
+
+                                <div className="p-4">
+                                    <h3 className="text-xl font-semibold">
+                                        {location.name}
+                                    </h3>
+
+                                    <p className="mt-1 text-xs text-[#77737d]">
+                                        {location.place}
+                                    </p>
+
+                                    <div className="mt-5 flex items-center justify-between">
+                                        <strong className="text-xl">
+                                            {location.metric}
+                                        </strong>
+
+                                        <button
+                                            type="button"
+                                            className="h-9 rounded-full bg-[#2b2930] px-4 text-xs font-medium text-white shadow-[0_8px_20px_rgba(30,30,35,0.24)] transition hover:-translate-y-0.5"
+                                        >
+                                            View ↘
+                                        </button>
+                                    </div>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+
+                    {/* SLIDER CONTROLS */}
+                    <div className="mt-8 flex justify-center gap-3">
+                        <button
+                            type="button"
+                            aria-label="Previous park"
+                            className="grid size-11 place-items-center rounded-full border border-[#dedde2] bg-white text-lg shadow-[0_14px_40px_rgba(40,40,50,0.10)] transition hover:-translate-y-0.5"
+                            onClick={() => setSlide((slide + 2) % 3)}
+                        >
+                            ←
+                        </button>
+
+                        <button
+                            type="button"
+                            aria-label="Next park"
+                            className="grid size-11 place-items-center rounded-full border border-[#dedde2] bg-white text-lg shadow-[0_14px_40px_rgba(40,40,50,0.10)] transition hover:-translate-y-0.5"
+                            onClick={() => setSlide((slide + 1) % 3)}
+                        >
+                            →
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section className="px-5 py-20 md:px-10">
+                <div className="mb-16 text-center">
+                    <span className="rounded-full bg-[#eadff2] px-4 py-2 text-[10px] font-semibold uppercase text-[#684d79]">
+                        Park operations
+                    </span>
+
+                    <h2 className="mt-7 text-5xl leading-none md:text-6xl">
+                        One platform, every signal,
+                        <br />
+                        <em className="font-serif">always connected</em>
+                    </h2>
+
+                    <p className="mx-auto mt-6 max-w-2xl text-sm leading-6 text-[#77737d]">
+                        A calmer way to coordinate teams, understand park
+                        conditions, and care for every acre.
+                    </p>
+                </div>
+
+                <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                    {/* UNIFIED DASHBOARD */}
+                    <article className="min-h-80 overflow-hidden rounded-2xl bg-white p-7 shadow-[0_14px_40px_rgba(40,40,50,0.10)]">
+                        <div className="mb-8 text-3xl">▥</div>
+
+                        <h3 className="text-xl font-semibold">
+                            Unified dashboard
+                        </h3>
+
+                        <p className="mt-2 text-sm text-[#77737d]">
+                            Track incidents, occupancy, habitats, and field
+                            teams in one place.
+                        </p>
+
+                        <div className="mt-8 flex h-24 items-end gap-2">
+                            {[55, 75, 44, 92, 60, 82, 70].map(
+                                (height, index) => (
+                                    <span
+                                        key={index}
+                                        className="flex-1 rounded-t bg-[#eadff2]"
+                                        style={{
+                                            height: `${height}%`,
+                                        }}
+                                    />
+                                ),
+                            )}
+                        </div>
+                    </article>
+
+                    {/* TEAM COORDINATION */}
+                    <article className="min-h-80 rounded-2xl bg-[#2b2930] p-7 text-white shadow-[0_14px_40px_rgba(40,40,50,0.10)]">
+                        <div className="mb-8 text-3xl">♟</div>
+
+                        <h3 className="text-xl font-semibold">
+                            Team coordination
+                        </h3>
+
+                        <p className="mt-2 text-sm opacity-60">
+                            Connect dispatch, rangers, volunteers, and
+                            maintenance crews.
+                        </p>
+
+                        <div className="relative mx-auto mt-9 grid size-36 place-items-center rounded-full border border-[#eadff2]/30">
+                            <div className="grid size-24 place-items-center rounded-full border border-[#7bc7e8]/50">
+                                <Logo
+                                    className="h-12 w-12 bg-current"
+                                    classNameIcon="bg-black"
+                                />
+                            </div>
+                        </div>
+                    </article>
+
+                    {/* AERIAL IMAGE */}
+                    <article className="relative row-span-2 min-h-152.5 overflow-hidden rounded-2xl bg-white shadow-[0_14px_40px_rgba(40,40,50,0.10)]">
+                        <img
+                            src={aerialImage}
+                            alt="Protected park landscape"
+                            loading="lazy"
+                            width={1024}
+                            height={1280}
+                            className="absolute inset-0 h-full w-full object-cover"
+                        />
+
+                        <div className="absolute inset-x-0 top-0 bg-linear-to-b from-white via-white/90 to-transparent p-8 pb-28 text-center">
+                            <span className="rounded-full bg-white px-3 py-1 text-[9px] uppercase shadow">
+                                Sustainable
+                            </span>
+
+                            <h3 className="mt-6 text-2xl font-semibold">
+                                Smarter parks.
+                                <br />
+                                Stronger ecosystems.
+                            </h3>
+
+                            <p className="mt-3 text-xs text-[#77737d]">
+                                Better data helps every team protect more with
+                                less.
+                            </p>
+                        </div>
+                    </article>
+
+                    {/* SCALE MONITORING */}
+                    <article className="min-h-72 rounded-2xl bg-linear-to-br from-[#f6e2c9] to-[#eadff2] p-7 shadow-[0_14px_40px_rgba(40,40,50,0.10)] md:col-span-2">
+                        <div className="grid gap-8 md:grid-cols-2 md:items-center">
+                            <div>
+                                <h3 className="text-2xl font-semibold">
+                                    From one trail
+                                    <br />
+                                    to an entire park system
+                                </h3>
+
+                                <p className="mt-3 max-w-sm text-xs leading-5 text-[#77737d]">
+                                    Scale monitoring from a single site to every
+                                    park in your network without losing the
+                                    detail that matters.
+                                </p>
+
+                                <button
+                                    type="button"
+                                    className="mt-8 h-11 rounded-full bg-[#2b2930] px-6 text-sm font-medium text-white shadow-[0_8px_20px_rgba(30,30,35,0.24)] transition-all hover:-translate-y-0.5"
+                                >
+                                    See the platform
+                                </button>
+                            </div>
+
+                            <div className="space-y-3">
+                                {[
+                                    "Ranger team · North",
+                                    "Visitor flow · Central",
+                                    "Habitat sensor · East",
+                                ].map((item, index) => (
+                                    <div
+                                        key={item}
+                                        className="rounded-xl bg-white/80 p-4 shadow-[0_14px_40px_rgba(40,40,50,0.10)]"
+                                    >
+                                        <div className="flex justify-between text-xs">
+                                            <b>{item}</b>
+
+                                            <span>{[94, 81, 88][index]}%</span>
+                                        </div>
+
+                                        <div className="mt-3 flex gap-1">
+                                            {Array.from({
+                                                length: 12,
+                                            }).map((_, barIndex) => (
+                                                <span
+                                                    key={barIndex}
+                                                    className={`h-2 flex-1 rounded ${
+                                                        barIndex <
+                                                        ([11, 9, 10][index] ??
+                                                            0)
+                                                            ? "bg-[#dff2dc]"
+                                                            : "bg-[#e7e6ea]"
+                                                    }`}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <footer id="contact" className="px-7 pb-12 pt-16 md:px-12">
+                <div className="grid gap-10 border-t border-[#dedde2] py-12 md:grid-cols-4">
+                    <div>
+                        <div className="flex items-center gap-3 text-xl font-semibold">
+                            <Logo
+                                className="h-9 w-9"
+                                classNameIcon="bg-current"
+                            />
+                            parkwatch
+                        </div>
+
+                        <p className="mt-4 max-w-48 text-xs leading-5 text-[#77737d]">
+                            From the first trail marker to the widest protected
+                            landscape.
+                        </p>
+                    </div>
+
+                    {/* FOOTER LINKS */}
+                    {[
+                        [
+                            "Platform",
+                            "Live map",
+                            "Incident alerts",
+                            "Visitor analytics",
+                            "Team dispatch",
+                        ],
+                        [
+                            "Resources",
+                            "Park stories",
+                            "Field guide",
+                            "Reports",
+                            "Support",
+                        ],
+                        [
+                            "Company",
+                            "About us",
+                            "Partnerships",
+                            "Careers",
+                            "Contact",
+                        ],
+                    ].map(([heading, ...links]) => (
+                        <div key={heading}>
+                            <h4 className="mb-5 text-sm font-semibold">
+                                {heading}
+                            </h4>
+
+                            {links.map((link) => (
+                                <a
+                                    href="#"
+                                    key={link}
+                                    className="mb-3 block text-xs text-[#77737d] transition hover:text-[#29272f]"
+                                >
+                                    {link}
+                                </a>
+                            ))}
+                        </div>
+                    ))}
+                </div>
+
+                <div className="flex flex-col justify-between gap-4 border-t border-[#dedde2] pt-7 text-[10px] text-[#77737d] sm:flex-row">
+                    <span>Terms of use &nbsp;&nbsp; Privacy policy</span>
+
+                    <span>© 2026 ParkWatch. All rights reserved.</span>
+                </div>
+            </footer>
+        </main>
     );
 }

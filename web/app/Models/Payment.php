@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Payment extends Model
 {
@@ -24,6 +25,7 @@ class Payment extends Model
         'currency',
         'method',
         'status',
+        'idempotency_key',
         'gateway_reference',
         'gateway_payload',
         'paid_at',
@@ -64,5 +66,10 @@ class Payment extends Model
     public function collectedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'collected_by');
+    }
+
+    public function events(): HasMany
+    {
+        return $this->hasMany(PaymentEvent::class, 'payment_id');
     }
 }

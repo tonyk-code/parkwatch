@@ -37,6 +37,21 @@ class HandleInertiaRequests extends Middleware
     {
         $user = $request->user();
 
+        $isManager = false;
+
+        if ($user && $user->user_type->value === 'staff') {
+            $isManager = $user->staffAssignments()
+                ->where('is_active', true)
+                ->where('starts_at', '<=', now())
+                ->where(function ($query) {
+                    $query
+                        ->whereNull('ends_at')
+                        ->orWhere('ends_at', '>=', now());
+                })
+                ->where('role_name', 'manager')
+                ->exists();
+        }
+
         return [
             ...parent::share($request),
 
@@ -48,6 +63,7 @@ class HandleInertiaRequests extends Middleware
                     'user_type' => $user->user_type->value,
                     'organization_id' => $user->organization_id,
                     'is_active' => $user->is_active,
+                    'is_manager' => $isManager,
                 ] : null,
             ],
         ];

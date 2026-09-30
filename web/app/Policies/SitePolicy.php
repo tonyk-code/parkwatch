@@ -19,16 +19,14 @@ class SitePolicy
             return false;
         }
 
-        if ($user->user_type === UserType::Owner) {
-            return true;
-        }
-
-        return $user->roleForSite($site->id) === 'manager';
+        return $user->user_type === UserType::Owner
+            || $user->roleForSite($site->id) === "manager";
     }
 
     public function delete(User $user, Site $site): bool
     {
-        return $user->user_type === UserType::Owner
+        return $user->is_active
+            && $user->user_type === UserType::Owner
             && $user->organization_id === $site->organization_id;
     }
 

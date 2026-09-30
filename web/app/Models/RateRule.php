@@ -37,6 +37,6 @@ class RateRule extends Model
 
     public function ratePlan(): BelongsTo
     {
-        return $this->belongsTo(RatePlan::class);
+        return $this->belongsTo(RatePlan::class, 'rate_plan_id');
     }
 }

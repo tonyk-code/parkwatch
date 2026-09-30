@@ -6,6 +6,7 @@ use App\Enums\UserType;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -101,5 +102,32 @@ class User extends Authenticatable
                     ->orWhere('ends_at', '>=', now());
             })
             ->value('role_name');
+    }
+
+    public function accessibleSitesQuery(): Builder
+    {
+        $query = Site::query()
+            ->where('organization_id', $this->organization_id)
+            ->where('is_active', true);
+
+        if ($this->user_type === UserType::Owner) {
+            return $query;
+        }
+
+        if ($this->user_type !== UserType::Staff) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query->whereHas('staffAssignments', function (Builder $query) {
+            $query
+                ->where('user_id', $this->id)
+                ->where('is_active', true)
+                ->where('starts_at', '<=', now())
+                ->where(function (Builder $query) {
+                    $query
+                        ->whereNull('ends_at')
+                        ->orWhere('ends_at', '>=', now());
+                });
+        });
     }
 }
