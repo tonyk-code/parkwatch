@@ -27,10 +27,7 @@ class PaymentService
         $result = null;
 
         try {
-            $result = DB::transaction(function () use (
-                $session,
-                $idempotencyKey,
-            ) {
+            $result = DB::transaction(function () use ($session, $idempotencyKey, ) {
                 $existingPayment = Payment::query()
                     ->where('idempotency_key', $idempotencyKey)
                     ->first();
@@ -56,7 +53,7 @@ class PaymentService
                 $remainingAmount = max(
                     0,
                     (int) $session->amount_due
-                        - (int) $session->amount_paid,
+                    - (int) $session->amount_paid,
                 );
 
                 if ($remainingAmount <= 0) {
@@ -139,7 +136,7 @@ class PaymentService
 
                     $this->recordEvent(
                         payment: $lockedPayment,
-                        eventId : 'local-' . Str::uuid()->toString(),
+                        eventId: 'local-' . Str::uuid()->toString(),
                         eventType: 'payment.gateway_failed',
                         status: 'failed',
                         payload: [
@@ -152,10 +149,7 @@ class PaymentService
             throw $exception;
         }
 
-        return DB::transaction(function () use (
-            $payment,
-            $gatewayResult,
-        ) {
+        return DB::transaction(function () use ($payment, $gatewayResult, ) {
             $lockedPayment = Payment::query()
                 ->whereKey($payment->id)
                 ->lockForUpdate()
@@ -173,7 +167,7 @@ class PaymentService
 
             $this->recordEvent(
                 payment: $lockedPayment,
-                eventId : 'local-' . Str::uuid()->toString(),
+                eventId: 'local-' . Str::uuid()->toString(),
                 eventType: 'payment.processing',
                 status: $gatewayResult['status'],
                 payload: $gatewayResult['payload'],
@@ -190,15 +184,6 @@ class PaymentService
         if ($payment->session_id !== $session->id) {
             throw new RuntimeException(
                 'This idempotency key belongs to another parking session.',
-            );
-        }
-
-        if ((int) $payment->amount_minor !== max(
-            0,
-            (int) $session->amount_due - (int) $session->amount_paid,
-        )) {
-            throw new RuntimeException(
-                'The payment amount does not match the parking session balance.',
             );
         }
 
