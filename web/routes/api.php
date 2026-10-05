@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CustomerPaymentController;
+use App\Http\Controllers\Api\CustomerVehicleController;
 use App\Http\Controllers\Api\ReservationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -43,5 +44,25 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post(
         '/customer/reservations',
         [ReservationController::class, 'store']
+    );
+
+    Route::get(
+        '/customer/reservations',
+        [ReservationController::class, 'index']
+    );
+
+    Route::post(
+        '/customer/reservations/{reservation}/cancel',
+        [ReservationController::class, 'cancel']
+    );
+
+    Route::get(
+        '/customer/vehicles',
+        [CustomerVehicleController::class, 'index']
+    );
+
+    Route::post(
+        '/customer/vehicles',
+        [CustomerVehicleController::class, 'store']
     );
 });

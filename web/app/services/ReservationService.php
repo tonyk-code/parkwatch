@@ -82,4 +82,109 @@ class ReservationService
             ]);
         });
     }
+
+    public function cancel(
+        User $user,
+        int $reservationId,
+    ): Reservation {
+        return DB::transaction(function () use ($user, $reservationId, ) {
+            $reservation = Reservation::query()
+                ->whereKey($reservationId)
+                ->where('user_id', $user->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if (!in_array($reservation->status, ['held', 'confirmed'], true)) {
+                throw new RuntimeException(
+                    'This reservation can no longer be cancelled.',
+                );
+            }
+
+            $spotState = SpotState::query()
+                ->where('spot_id', $reservation->spot_id)
+                ->lockForUpdate()
+                ->first();
+
+            $reservation->update([
+                'status' => 'cancelled',
+            ]);
+
+            if (
+                $spotState &&
+                $spotState->reservation_id === $reservation->id
+            ) {
+                $spotState->update([
+                    'status' => SpotStatus::Free,
+                    'reservation_id' => null,
+                    'source' => 'manual',
+                    'last_changed_at' => now(),
+                ]);
+            }
+
+            return $reservation->fresh([
+                'site',
+                'zone',
+                'spot',
+            ]);
+        });
+    }
+
+    public function expireDueReservations(): int
+    {
+        $expiredCount = 0;
+
+        Reservation::query()
+            ->whereIn('status', ['held', 'confirmed'])
+            ->where('expires_at', '<=', now())
+            ->chunkById(100, function ($reservations) use (&$expiredCount) {
+                foreach ($reservations as $reservation) {
+                    DB::transaction(function () use ($reservation, &$expiredCount, ) {
+                        $lockedReservation = Reservation::query()
+                            ->whereKey($reservation->id)
+                            ->lockForUpdate()
+                            ->first();
+
+                        if (!$lockedReservation) {
+                            return;
+                        }
+
+                        if (
+                            !in_array(
+                                $lockedReservation->status,
+                                ['held', 'confirmed'],
+                                true,
+                            ) ||
+                            $lockedReservation->expires_at->isFuture()
+                        ) {
+                            return;
+                        }
+
+                        $spotState = SpotState::query()
+                            ->where('spot_id', $lockedReservation->spot_id)
+                            ->lockForUpdate()
+                            ->first();
+
+                        $lockedReservation->update([
+                            'status' => 'expired',
+                        ]);
+
+                        if (
+                            $spotState &&
+                            $spotState->reservation_id === $lockedReservation->id
+                        ) {
+                            $spotState->update([
+                                'status' => SpotStatus::Free,
+                                'reservation_id' => null,
+                                'source' => 'manual',
+                                'last_changed_at' => now(),
+                            ]);
+                        }
+
+                        $expiredCount++;
+                    });
+                }
+            });
+
+        return $expiredCount;
+    }
 }

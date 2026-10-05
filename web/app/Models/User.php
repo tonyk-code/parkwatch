@@ -136,4 +136,24 @@ class User extends Authenticatable
     {
         return $this->hasMany(ParkingSession::class, 'user_id');
     }
+
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(Reservation::class, 'user_id');
+    }
+
+    public function vehicles(): HasMany
+    {
+        return $this->hasMany(
+            Vehicle::class,
+            'owner_user_id'
+        );
+    }
+
+    public function isCustomer(): bool
+    {
+        return $this->type instanceof UserType
+            ? $this->type === UserType::Customer
+            : $this->type === UserType::Customer->value;
+    }
 }
